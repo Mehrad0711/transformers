@@ -385,7 +385,8 @@ def main(args, model=None) -> SummarizationModule:
     trainer.logger.log_hyperparams(model.hparams)
 
     # test() without a model tests using the best checkpoint automatically
-    trainer.test()
+    if not args.fp16:
+        trainer.test()
     return model
 
 
