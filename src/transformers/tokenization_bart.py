@@ -257,3 +257,4 @@ class BartTokenizerFast(RobertaTokenizerFast):
         )["input_ids"]
         model_inputs["labels"] = labels
         return model_inputs
+

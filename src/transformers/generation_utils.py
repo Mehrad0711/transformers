@@ -448,6 +448,7 @@ class GenerationMixin:
             cur_len < max_length
         ), f"The context has {cur_len} number of tokens, but `max_length` is only {max_length}. Please make sure that `max_length` is bigger than the number of tokens, by setting either `generate(max_length=...,...)` or `config.max_length = ...`"
 
+        model_specific_kwargs['decoder_start_token_id'] = decoder_start_token_id
         if num_beams > 1:
             output = self._generate_beam_search(
                 input_ids,
@@ -659,7 +660,7 @@ class GenerationMixin:
             if self.config.is_encoder_decoder and do_sample is False:
                 # TODO (PVP) still a bit hacky here - there might be a better solution
                 next_token_logits = self.adjust_logits_during_generation(
-                    next_token_logits, cur_len=cur_len, max_length=max_length
+                    next_token_logits, cur_len=cur_len, max_length=max_length, decoder_start_token_id=model_specific_kwargs.get('decoder_start_token_id', None)
                 )
 
             scores = F.log_softmax(next_token_logits, dim=-1)  # (batch_size * num_beams, vocab_size)

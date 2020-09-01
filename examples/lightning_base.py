@@ -104,12 +104,19 @@ class BaseTransformer(pl.LightningModule):
             self.tokenizer: PreTrainedTokenizer = tokenizer
         self.model_type = MODEL_MODES[mode]
         if model is None:
-            self.model = self.model_type.from_pretrained(
-                self.hparams.model_name_or_path,
-                from_tf=bool(".ckpt" in self.hparams.model_name_or_path),
-                config=self.config,
-                cache_dir=cache_dir,
-            )
+            if hparams.reset_weights:
+                config = AutoConfig.from_pretrained(
+                    self.hparams.model_name_or_path,
+                    cache_dir=cache_dir,
+                )
+                self.model = self.model_type.from_config(config)
+            else:
+                self.model = self.model_type.from_pretrained(
+                    self.hparams.model_name_or_path,
+                    from_tf=bool(".ckpt" in self.hparams.model_name_or_path),
+                    config=self.config,
+                    cache_dir=cache_dir,
+                )
         else:
             self.model = model
 
@@ -209,6 +216,13 @@ class BaseTransformer(pl.LightningModule):
             required=True,
             help="Path to pretrained model or model identifier from huggingface.co/models",
         )
+        
+        parser.add_argument(
+            "--reset_weights",
+            action='store_true',
+            help="Only load model architecture but not the weights is instantiating from a pretrained model",
+        )
+        
         parser.add_argument(
             "--config_name", default="", type=str, help="Pretrained config name or path if not the same as model_name"
         )

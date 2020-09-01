@@ -153,3 +153,13 @@ debug.env
 
 #ctags
 tags
+Pipfile
+Pipfile.lock
+examples/seq2seq/enfa_bleu.json
+examples/seq2seq/enfa_finetune_baseline/
+examples/seq2seq/enfa_finetune_baseline_old/
+examples/seq2seq/enro_finetune_baseline/
+examples/seq2seq/lightning_logs/
+examples/seq2seq/mbart_val_generations.txt
+examples/seq2seq/wandb/
+examples/seq2seq/wmt_en_ro/
