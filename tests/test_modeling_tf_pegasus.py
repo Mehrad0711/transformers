@@ -363,7 +363,8 @@ class TFPegasusIntegrationTests(unittest.TestCase):
             num_beams=2,
             use_cache=True,
         )
-        generated_words = self.tokenizer.batch_decode(generated_ids.numpy(), skip_special_tokens=True)
+        with self.tokenizer.as_target_tokenizer():
+            generated_words = self.tokenizer.batch_decode(generated_ids.numpy(), skip_special_tokens=True)
         return generated_words
 
     @slow

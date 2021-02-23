@@ -240,7 +240,8 @@ def decode_summary(summary_tokens, tokenizer):
     suitable for evaluation.
     """
     summary_tokens = summary_tokens.to("cpu").numpy()
-    summary = tokenizer.decode(summary_tokens)
+    with tokenizer.as_target_tokenizer():
+        summary = tokenizer.decode(summary_tokens)
     sentences = summary.split(".")
     sentences = [s + "." for s in sentences]
     return sentences

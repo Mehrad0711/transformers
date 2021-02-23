@@ -528,7 +528,8 @@ PEGASUS_GENERATION_EXAMPLE = r"""
 
         >>> # Generate Summary
         >>> summary_ids = model.generate(inputs['input_ids'])
-        >>> print([tokenizer.decode(g, skip_special_tokens=True, clean_up_tokenization_spaces=False) for g in summary_ids])
+        >>> with tokenizer.as_target_tokenizer():
+        >>>     print([tokenizer.decode(g, skip_special_tokens=True, clean_up_tokenization_spaces=False) for g in summary_ids])
 """
 
 PEGASUS_INPUTS_DOCSTRING = r"""

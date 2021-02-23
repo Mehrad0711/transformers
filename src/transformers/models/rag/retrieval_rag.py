@@ -599,8 +599,8 @@ class RagRetriever:
         n_docs = n_docs if n_docs is not None else self.n_docs
         prefix = prefix if prefix is not None else self.config.generator.prefix
         retrieved_doc_embeds, doc_ids, docs = self.retrieve(question_hidden_states, n_docs)
-
-        input_strings = self.question_encoder_tokenizer.batch_decode(question_input_ids, skip_special_tokens=True)
+        with self.question_encoder_tokenizer.as_target_tokenizer():
+            input_strings = self.question_encoder_tokenizer.batch_decode(question_input_ids, skip_special_tokens=True)
         context_input_ids, context_attention_mask = self.postprocess_docs(
             docs, input_strings, prefix, n_docs, return_tensors=return_tensors
         )

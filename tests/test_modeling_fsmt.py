@@ -459,7 +459,8 @@ class FSMTModelIntegrationTests(unittest.TestCase):
         input_ids = tokenizer.encode(src_text, return_tensors="pt").to(torch_device)
 
         outputs = model.generate(input_ids)
-        decoded = tokenizer.decode(outputs[0], skip_special_tokens=True)
+        with tokenizer.as_target_tokenizer():
+            decoded = tokenizer.decode(outputs[0], skip_special_tokens=True)
         assert decoded == tgt_text, f"\n\ngot: {decoded}\nexp: {tgt_text}\n"
 
     @parameterized.expand(pairs)

@@ -166,13 +166,14 @@ class TextGenerationPipeline(Pipeline):
                     if input_ids is None:
                         prompt_length = 0
                     else:
-                        prompt_length = len(
-                            self.tokenizer.decode(
-                                input_ids[0],
-                                skip_special_tokens=True,
-                                clean_up_tokenization_spaces=clean_up_tokenization_spaces,
+                        with self.tokenizer.as_target_tokenizer():
+                            prompt_length = len(
+                                self.tokenizer.decode(
+                                    input_ids[0],
+                                    skip_special_tokens=True,
+                                    clean_up_tokenization_spaces=clean_up_tokenization_spaces,
+                                )
                             )
-                        )
 
                     if return_full_text:
                         all_text = prompt_text + text[prompt_length:]

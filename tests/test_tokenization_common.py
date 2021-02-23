@@ -117,7 +117,8 @@ class TokenizerTesterMixin:
         return input_txt, input_txt
 
     def get_clean_sequence(self, tokenizer, with_prefix_space=False, max_length=20, min_length=5) -> Tuple[str, list]:
-        toks = [(i, tokenizer.decode([i], clean_up_tokenization_spaces=False)) for i in range(len(tokenizer))]
+        with tokenizer.as_target_tokenizer():
+            toks = [(i, tokenizer.decode([i], clean_up_tokenization_spaces=False)) for i in range(len(tokenizer))]
         toks = list(filter(lambda t: re.match(r"^[ a-zA-Z]+$", t[1]), toks))
         toks = list(filter(lambda t: [t[0]] == tokenizer.encode(t[1], add_special_tokens=False), toks))
         if max_length is not None and len(toks) > max_length:
@@ -129,13 +130,14 @@ class TokenizerTesterMixin:
         toks_ids = [t[0] for t in toks]
 
         # Ensure consistency
-        output_txt = tokenizer.decode(toks_ids, clean_up_tokenization_spaces=False)
-        if " " not in output_txt and len(toks_ids) > 1:
-            output_txt = (
-                tokenizer.decode([toks_ids[0]], clean_up_tokenization_spaces=False)
-                + " "
-                + tokenizer.decode(toks_ids[1:], clean_up_tokenization_spaces=False)
-            )
+        with tokenizer.as_target_tokenizer():
+            output_txt = tokenizer.decode(toks_ids, clean_up_tokenization_spaces=False)
+            if " " not in output_txt and len(toks_ids) > 1:
+                output_txt = (
+                    tokenizer.decode([toks_ids[0]], clean_up_tokenization_spaces=False)
+                    + " "
+                    + tokenizer.decode(toks_ids[1:], clean_up_tokenization_spaces=False)
+                )
         if with_prefix_space:
             output_txt = " " + output_txt
         output_ids = tokenizer.encode(output_txt, add_special_tokens=False)
@@ -541,15 +543,15 @@ class TokenizerTesterMixin:
                 tokenizer.add_special_tokens({"cls_token": special_token})
                 encoded_special_token = tokenizer.encode(special_token, add_special_tokens=False)
                 self.assertEqual(len(encoded_special_token), 1)
-
-                text = tokenizer.decode(ids + encoded_special_token, clean_up_tokenization_spaces=False)
+                with tokenizer.as_target_tokenizer():
+                    text = tokenizer.decode(ids + encoded_special_token, clean_up_tokenization_spaces=False)
                 encoded = tokenizer.encode(text, add_special_tokens=False)
 
                 input_encoded = tokenizer.encode(input_text, add_special_tokens=False)
                 special_token_id = tokenizer.encode(special_token, add_special_tokens=False)
                 self.assertEqual(encoded, input_encoded + special_token_id)
-
-                decoded = tokenizer.decode(encoded, skip_special_tokens=True)
+                with tokenizer.as_target_tokenizer():
+                    decoded = tokenizer.decode(encoded, skip_special_tokens=True)
                 self.assertTrue(special_token not in decoded)
 
     def test_internal_consistency(self):

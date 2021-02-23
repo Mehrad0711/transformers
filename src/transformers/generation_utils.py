@@ -777,7 +777,8 @@ class GenerationMixin:
             >>> model = AutoModelForCausalLM.from_pretrained("distilgpt2")
             >>> # do greedy decoding without providing a prompt
             >>> outputs = model.generate(max_length=40)
-            >>> print("Generated:", tokenizer.decode(outputs[0], skip_special_tokens=True))
+            >>> with tokenizer.as_target_tokenizer():
+            >>>     print("Generated:", tokenizer.decode(outputs[0], skip_special_tokens=True))
 
             >>> tokenizer = AutoTokenizer.from_pretrained("t5-base")
             >>> model = AutoModelForSeq2SeqLM.from_pretrained("t5-base")
@@ -790,7 +791,8 @@ class GenerationMixin:
             >>> # generate 3 independent sequences using beam search decoding (5 beams)
             >>> # with T5 encoder-decoder model conditioned on short news article.
             >>> outputs = model.generate(input_ids=input_ids, num_beams=5, num_return_sequences=3)
-            >>> print("Generated:", tokenizer.batch_decode(outputs, skip_special_tokens=True))
+            >>> with tokenizer.as_target_tokenizer():
+            >>>     print("Generated:", tokenizer.batch_decode(outputs, skip_special_tokens=True))
 
             >>> tokenizer = AutoTokenizer.from_pretrained("distilgpt2")
             >>> model = AutoModelForCausalLM.from_pretrained("distilgpt2")
@@ -799,7 +801,8 @@ class GenerationMixin:
             >>> input_ids = tokenizer(input_context, return_tensors="pt").input_ids
             >>> # generate 3 candidates using sampling
             >>> outputs = model.generate(input_ids=input_ids, max_length=20, num_return_sequences=3, do_sample=True)
-            >>> print("Generated:", tokenizer.batch_decode(outputs, skip_special_tokens=True))
+            >>> with tokenizer.as_target_tokenizer():
+            >>>     print("Generated:", tokenizer.batch_decode(outputs, skip_special_tokens=True))
 
             >>> tokenizer = AutoTokenizer.from_pretrained("ctrl")
             >>> model = AutoModelForCausalLM.from_pretrained("ctrl")
@@ -808,7 +811,8 @@ class GenerationMixin:
             >>> # encode input context
             >>> input_ids = tokenizer(input_context, return_tensors="pt").input_ids
             >>> outputs = model.generate(input_ids=input_ids, max_length=20, repetition_penalty=1.2)
-            >>> print("Generated:", tokenizer.decode(outputs[0], skip_special_tokens=True))
+            >>> with tokenizer.as_target_tokenizer():
+            >>>     print("Generated:", tokenizer.decode(outputs[0], skip_special_tokens=True))
 
             >>> tokenizer = AutoTokenizer.from_pretrained("gpt2")
             >>> model = AutoModelForCausalLM.from_pretrained("gpt2")
@@ -819,7 +823,8 @@ class GenerationMixin:
             >>> input_ids = tokenizer(input_context, return_tensors="pt").input_ids
             >>> # generate sequences without allowing bad_words to be generated
             >>> outputs = model.generate(input_ids=input_ids, max_length=20, do_sample=True, bad_words_ids=bad_words_ids)
-            >>> print("Generated:", tokenizer.decode(outputs[0], skip_special_tokens=True))
+            >>> with tokenizer.as_target_tokenizer():
+            >>>     print("Generated:", tokenizer.decode(outputs[0], skip_special_tokens=True))
         """
 
         # set init values

@@ -148,7 +148,8 @@ class FSMTTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
             self.assertListEqual(encoded_ids, tgt_input_ids)
 
             # and decode backward, using the reversed languages model
-            decoded_text = tokenizer_dec.decode(encoded_ids, skip_special_tokens=True)
+            with tokenizer_dec.as_target_tokenizer():
+                decoded_text = tokenizer_dec.decode(encoded_ids, skip_special_tokens=True)
             self.assertEqual(decoded_text, src_text)
 
     @slow

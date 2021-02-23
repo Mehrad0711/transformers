@@ -1276,7 +1276,8 @@ class ProphetNetModelIntegrationTest(unittest.TestCase):
         input_ids = input_ids.to(torch_device)
 
         gen_output = model.generate(input_ids, num_beams=5, early_stopping=True)
-        generated_questions = tokenizer.batch_decode(gen_output, skip_special_tokens=True)
+        with tokenizer.as_target_tokenizer():
+            generated_questions = tokenizer.batch_decode(gen_output, skip_special_tokens=True)
 
         EXPECTED_QUESTIONS = [
             "along with paul allen, who founded microsoft?",

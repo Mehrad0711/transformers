@@ -132,7 +132,8 @@ def main(
     question = rag_example_args.question or "What does Moses' rod turn into ?"
     input_ids = tokenizer.question_encoder(question, return_tensors="pt")["input_ids"]
     generated = model.generate(input_ids)
-    generated_string = tokenizer.batch_decode(generated, skip_special_tokens=True)[0]
+    with tokenizer.as_target_tokenizer():
+        generated_string = tokenizer.batch_decode(generated, skip_special_tokens=True)[0]
     logger.info("Q: " + question)
     logger.info("A: " + generated_string)
 

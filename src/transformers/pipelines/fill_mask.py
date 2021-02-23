@@ -177,14 +177,15 @@ class FillMaskPipeline(Pipeline):
                 tokens[masked_index] = p
                 # Filter padding out:
                 tokens = tokens[np.where(tokens != self.tokenizer.pad_token_id)]
-                result.append(
-                    {
-                        "sequence": self.tokenizer.decode(tokens, skip_special_tokens=True),
-                        "score": v,
-                        "token": p,
-                        "token_str": self.tokenizer.decode(p),
-                    }
-                )
+                with self.tokenizer.as_target_tokenizer():
+                    result.append(
+                        {
+                            "sequence": self.tokenizer.decode(tokens, skip_special_tokens=True),
+                            "score": v,
+                            "token": p,
+                            "token_str": self.tokenizer.decode(p),
+                        }
+                    )
 
             # Append
             results += [result]

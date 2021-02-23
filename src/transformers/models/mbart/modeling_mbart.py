@@ -535,7 +535,8 @@ MBART_GENERATION_EXAMPLE = r"""
 
         >>> # Generate Summary
         >>> summary_ids = model.generate(inputs['input_ids'], num_beams=4, max_length=5, early_stopping=True)
-        >>> print([tokenizer.decode(g, skip_special_tokens=True, clean_up_tokenization_spaces=False) for g in summary_ids])
+        >>> with tokenizer.as_target_tokenizer():
+        >>>     print([tokenizer.decode(g, skip_special_tokens=True, clean_up_tokenization_spaces=False) for g in summary_ids])
 
     Mask filling example::
 
@@ -551,8 +552,8 @@ MBART_GENERATION_EXAMPLE = r"""
         >>> masked_index = (input_ids[0] == tokenizer.mask_token_id).nonzero().item()
         >>> probs = logits[0, masked_index].softmax(dim=0)
         >>> values, predictions = probs.topk(5)
-
-        >>> tokenizer.decode(predictions).split()
+        >>> with tokenizer.as_target_tokenizer():
+        >>>     tokenizer.decode(predictions).split()
 """
 
 MBART_INPUTS_DOCSTRING = r"""

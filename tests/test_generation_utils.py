@@ -1307,7 +1307,7 @@ class GenerationIntegrationTests(unittest.TestCase):
         outputs = bart_model.generate(
             input_ids, num_beams=4, num_return_sequences=2, num_beam_groups=4, diversity_penalty=2.0
         )
-
+        
         generated_text = bart_tokenizer.batch_decode(outputs, skip_special_tokens=True)
 
         self.assertListEqual(

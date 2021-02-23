@@ -353,7 +353,8 @@ class MBartEnroIntegrationTest(AbstractSeq2SeqIntegrationTest):
             ["UN Chief Says There Is No Military Solution in Syria"], return_tensors="pt"
         ).to(torch_device)
         translated_tokens = self.model.generate(**batch)
-        decoded = self.tokenizer.batch_decode(translated_tokens, skip_special_tokens=True)
+        with self.tokenizer.as_target_tokenizer():
+            decoded = self.tokenizer.batch_decode(translated_tokens, skip_special_tokens=True)
         self.assertEqual(self.tgt_text[0], decoded[0])
         # self.assertEqual(self.tgt_text[1], decoded[1])
 
@@ -361,7 +362,8 @@ class MBartEnroIntegrationTest(AbstractSeq2SeqIntegrationTest):
     def test_enro_generate_batch(self):
         batch: BatchEncoding = self.tokenizer(self.src_text, return_tensors="pt").to(torch_device)
         translated_tokens = self.model.generate(**batch)
-        decoded = self.tokenizer.batch_decode(translated_tokens, skip_special_tokens=True)
+        with self.tokenizer.as_target_tokenizer():
+            decoded = self.tokenizer.batch_decode(translated_tokens, skip_special_tokens=True)
         assert self.tgt_text == decoded
 
     def test_mbart_enro_config(self):
@@ -415,7 +417,8 @@ class MBartCC25IntegrationTest(AbstractSeq2SeqIntegrationTest):
             input_ids=inputs["input_ids"].to(torch_device),
             decoder_start_token_id=self.tokenizer.lang_code_to_id["ro_RO"],
         )
-        decoded = self.tokenizer.batch_decode(translated_tokens, skip_special_tokens=True)
+        with self.tokenizer.as_target_tokenizer():
+            decoded = self.tokenizer.batch_decode(translated_tokens, skip_special_tokens=True)
         self.assertEqual(self.tgt_text[0], decoded[0])
 
     @slow
@@ -424,9 +427,10 @@ class MBartCC25IntegrationTest(AbstractSeq2SeqIntegrationTest):
         outputs = self.model.generate(
             inputs["input_ids"], decoder_start_token_id=self.tokenizer.lang_code_to_id["en_XX"], num_beams=1
         )
-        prediction: str = self.tokenizer.batch_decode(
-            outputs, clean_up_tokenization_spaces=True, skip_special_tokens=True
-        )[0]
+        with self.tokenizer.as_target_tokenizer():
+            prediction: str = self.tokenizer.batch_decode(
+                outputs, clean_up_tokenization_spaces=True, skip_special_tokens=True
+            )[0]
         self.assertEqual(prediction, "of the best books I ever read!")
 
 

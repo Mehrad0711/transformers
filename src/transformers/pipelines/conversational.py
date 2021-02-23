@@ -277,13 +277,14 @@ class ConversationalPipeline(Pipeline):
             output = []
             for conversation_index, conversation in enumerate(conversations):
                 conversation.mark_processed()
-                conversation.generated_responses.append(
-                    self.tokenizer.decode(
-                        generated_responses[conversation_index][start_position:],
-                        skip_special_tokens=True,
-                        clean_up_tokenization_spaces=clean_up_tokenization_spaces,
+                with self.tokenizer.as_target_tokenizer():
+                    conversation.generated_responses.append(
+                        self.tokenizer.decode(
+                            generated_responses[conversation_index][start_position:],
+                            skip_special_tokens=True,
+                            clean_up_tokenization_spaces=clean_up_tokenization_spaces,
+                        )
                     )
-                )
                 output.append(conversation)
             if len(output) == 1:
                 return output[0]

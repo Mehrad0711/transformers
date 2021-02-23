@@ -1223,7 +1223,8 @@ class RagTokenForGeneration(RagPreTrainedModel):
 
             >>> # or directly generate
             >>> generated = model.generate(context_input_ids=docs_dict["context_input_ids"], context_attention_mask=docs_dict["context_attention_mask"], doc_scores=doc_scores)
-            >>> generated_string = tokenizer.batch_decode(generated, skip_special_tokens=True)
+            >>> with tokenizer.as_target_tokenizer():
+            >>>     generated_string = tokenizer.batch_decode(generated, skip_special_tokens=True)
         """
         n_docs = n_docs if n_docs is not None else self.config.n_docs
         do_marginalize = do_marginalize if do_marginalize is not None else self.config.do_marginalize

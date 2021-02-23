@@ -130,11 +130,12 @@ class Text2TextGenerationPipeline(Pipeline):
                 if return_tensors:
                     record[f"{self.return_name}_token_ids"] = generation
                 if return_text:
-                    record[f"{self.return_name}_text"] = self.tokenizer.decode(
-                        generation,
-                        skip_special_tokens=True,
-                        clean_up_tokenization_spaces=clean_up_tokenization_spaces,
-                    )
+                    with self.tokenizer.as_target_tokenizer():
+                        record[f"{self.return_name}_text"] = self.tokenizer.decode(
+                            generation,
+                            skip_special_tokens=True,
+                            clean_up_tokenization_spaces=clean_up_tokenization_spaces,
+                        )
                 results.append(record)
             return results
 

@@ -120,8 +120,9 @@ class MBartOneToManyIntegrationTest(unittest.TestCase):
     def test_tokenizer_decode_ignores_language_codes(self):
         self.assertIn(RO_CODE, self.tokenizer.all_special_ids)
         generated_ids = [RO_CODE, 884, 9019, 96, 9, 916, 86792, 36, 18743, 15596, 5, 2]
-        result = self.tokenizer.decode(generated_ids, skip_special_tokens=True)
-        expected_romanian = self.tokenizer.decode(generated_ids[1:], skip_special_tokens=True)
+        with self.tokenizer.as_target_tokenizer():
+            result = self.tokenizer.decode(generated_ids, skip_special_tokens=True)
+            expected_romanian = self.tokenizer.decode(generated_ids[1:], skip_special_tokens=True)
         self.assertEqual(result, expected_romanian)
         self.assertNotIn(self.tokenizer.eos_token, result)
 

@@ -334,7 +334,8 @@ class TFMBartModelIntegrationTest(unittest.TestCase):
         generated_ids = self.model.generate(
             model_inputs.input_ids, attention_mask=model_inputs.attention_mask, num_beams=2
         )
-        generated_words = self.tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
+        with self.tokenizer.as_target_tokenizer():
+            generated_words = self.tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
         return generated_words
 
     @slow

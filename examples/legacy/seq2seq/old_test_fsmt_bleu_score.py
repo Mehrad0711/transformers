@@ -63,9 +63,10 @@ class ModelEvalTester(unittest.TestCase):
             input_ids=batch.input_ids,
             num_beams=8,
         )
-        decoded_sentences = tokenizer.batch_decode(
-            outputs, skip_special_tokens=True, clean_up_tokenization_spaces=False
-        )
+        with tokenizer.as_target_tokenizer():
+            decoded_sentences = tokenizer.batch_decode(
+                outputs, skip_special_tokens=True, clean_up_tokenization_spaces=False
+            )
         scores = calculate_bleu(decoded_sentences, tgt_sentences)
         print(scores)
         self.assertGreaterEqual(scores["bleu"], min_bleu_score)

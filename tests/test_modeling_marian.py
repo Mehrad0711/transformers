@@ -359,7 +359,8 @@ class MarianIntegrationTest(unittest.TestCase):
         generated_ids = self.model.generate(
             model_inputs.input_ids, attention_mask=model_inputs.attention_mask, num_beams=2, max_length=128
         )
-        generated_words = self.tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
+        with self.tokenizer.as_target_tokenizer():
+            generated_words = self.tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
         return generated_words
 
 
@@ -392,7 +393,8 @@ class TestMarian_EN_DE_More(MarianIntegrationTest):
         with torch.no_grad():
             outputs = self.model(**model_inputs)
         max_indices = outputs.logits.argmax(-1)
-        self.tokenizer.batch_decode(max_indices)
+        with self.tokenizer.as_target_tokenizer():
+            self.tokenizer.batch_decode(max_indices)
 
     def test_unk_support(self):
         t = self.tokenizer

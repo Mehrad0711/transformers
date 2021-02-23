@@ -209,7 +209,8 @@ FSMT_GENERATION_EXAMPLE = r"""
         input_ids = tokenizer.encode(src_text, return_tensors='pt')
         outputs = model.generate(input_ids, num_beams=5, num_return_sequences=3)
         for i, output in enumerate(outputs):
-            decoded = tokenizer.decode(output, skip_special_tokens=True)
+            with tokenizer.as_target_tokenizer():
+                decoded = tokenizer.decode(output, skip_special_tokens=True)
             print(f"{i}: {decoded})
          # 1: Machine learning is great, isn't it? ...
 

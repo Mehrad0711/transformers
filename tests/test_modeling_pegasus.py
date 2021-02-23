@@ -294,7 +294,8 @@ class PegasusXSUMIntegrationTest(AbstractSeq2SeqIntegrationTest):
         )
         assert inputs.input_ids.shape == (2, 421)
         translated_tokens = self.model.generate(**inputs, num_beams=2)
-        decoded = self.tokenizer.batch_decode(translated_tokens, skip_special_tokens=True)
+        with self.tokenizer.as_target_tokenizer():
+            decoded = self.tokenizer.batch_decode(translated_tokens, skip_special_tokens=True)
         assert self.tgt_text == decoded
 
         if "cuda" not in torch_device:
@@ -302,7 +303,8 @@ class PegasusXSUMIntegrationTest(AbstractSeq2SeqIntegrationTest):
         # Demonstrate fp16 issue, Contributions welcome!
         self.model.half()
         translated_tokens_fp16 = self.model.generate(**inputs, max_length=10)
-        decoded_fp16 = self.tokenizer.batch_decode(translated_tokens_fp16, skip_special_tokens=True)
+        with self.tokenizer.as_target_tokenizer():
+            decoded_fp16 = self.tokenizer.batch_decode(translated_tokens_fp16, skip_special_tokens=True)
         assert decoded_fp16 == [
             "California's largest electricity provider has begun",
             "N-Dubz have revealed they were",

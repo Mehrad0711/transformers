@@ -73,7 +73,8 @@ inside the context manager :meth:`~transformers.MBartTokenizer.as_target_tokeniz
     >>> article = "UN Chief Says There Is No Military Solution in Syria"
     >>> inputs = tokenizer(article, return_tensors="pt")
     >>> translated_tokens = model.generate(**inputs, decoder_start_token_id=tokenizer.lang_code_to_id["ro_RO"])
-    >>> tokenizer.batch_decode(translated_tokens, skip_special_tokens=True)[0]
+	>>> with tokenizer.as_target_tokenizer():
+    >>> 	tokenizer.batch_decode(translated_tokens, skip_special_tokens=True)[0]
     "Şeful ONU declară că nu există o soluţie militară în Siria"
 
 
@@ -147,14 +148,16 @@ MBart-50 has its own tokenizer :class:`~transformers.MBart50Tokenizer`.
     tokenizer.src_lang = "hi_IN"
     encoded_hi = tokenizer(article_hi, return_tensors="pt")
     generated_tokens = model.generate(**encoded_hi, forced_bos_token_id=tokenizer.lang_code_to_id["fr_XX"])
-    tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
+	with tokenizer.as_target_tokenizer():
+    	tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
     # => "Le chef de l 'ONU affirme qu 'il n 'y a pas de solution militaire en Syria."
 
     # translate Arabic to English
     tokenizer.src_lang = "ar_AR"
     encoded_ar = tokenizer(article_ar, return_tensors="pt")
     generated_tokens = model.generate(**encoded_ar, forced_bos_token_id=tokenizer.lang_code_to_id["en_XX"])
-    tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
+	with tokenizer.as_target_tokenizer():
+		tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
     # => "The Secretary-General of the United Nations says there is no military solution in Syria."
 
 

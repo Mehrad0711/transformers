@@ -539,11 +539,13 @@ def main():
         preds, labels = eval_preds
         if isinstance(preds, tuple):
             preds = preds[0]
-        decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
+        with tokenizer.as_target_tokenizer():
+            decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
         if data_args.ignore_pad_token_for_loss:
             # Replace -100 in the labels as we can't decode them.
             labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
-        decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+        with tokenizer.as_target_tokenizer():
+            decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
 
         # Some simple post-processing
         decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
@@ -632,9 +634,10 @@ def main():
             all_metrics.update(metrics)
 
             if training_args.predict_with_generate:
-                test_preds = tokenizer.batch_decode(
-                    test_results.predictions, skip_special_tokens=True, clean_up_tokenization_spaces=True
-                )
+                with tokenizer.as_target_tokenizer():
+                    test_preds = tokenizer.batch_decode(
+                        test_results.predictions, skip_special_tokens=True, clean_up_tokenization_spaces=True
+                    )
                 test_preds = [pred.strip() for pred in test_preds]
                 output_test_preds_file = os.path.join(training_args.output_dir, "test_preds_seq2seq.txt")
                 with open(output_test_preds_file, "w") as writer:

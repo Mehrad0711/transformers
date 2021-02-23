@@ -56,7 +56,8 @@ def generate_summaries_or_translations(
             attention_mask=batch.attention_mask,
             **generate_kwargs,
         )
-        dec = tokenizer.batch_decode(summaries, skip_special_tokens=True, clean_up_tokenization_spaces=False)
+        with tokenizer.as_target_tokenizer():
+            dec = tokenizer.batch_decode(summaries, skip_special_tokens=True, clean_up_tokenization_spaces=False)
         for hypothesis in dec:
             fout.write(hypothesis + "\n")
             fout.flush()

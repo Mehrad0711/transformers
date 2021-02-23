@@ -780,8 +780,9 @@ class RagModelIntegrationTests(unittest.TestCase):
             num_return_sequences=2,
         )
         # sequence generate test
-        output_text_1 = rag_decoder_tokenizer.decode(output_ids[0], skip_special_tokens=True)
-        output_text_2 = rag_decoder_tokenizer.decode(output_ids[1], skip_special_tokens=True)
+        with rag_decoder_tokenizer.as_target_tokenizer():
+            output_text_1 = rag_decoder_tokenizer.decode(output_ids[0], skip_special_tokens=True)
+            output_text_2 = rag_decoder_tokenizer.decode(output_ids[1], skip_special_tokens=True)
 
         # Expected outputs as given by model at integration time.
         EXPECTED_OUTPUT_TEXT_1 = "\"She's My Kind of Girl"
@@ -819,8 +820,9 @@ class RagModelIntegrationTests(unittest.TestCase):
             num_return_sequences=2,
         )
         # sequence generate test
-        output_text_1 = rag_decoder_tokenizer.decode(output_ids[0], skip_special_tokens=True)
-        output_text_2 = rag_decoder_tokenizer.decode(output_ids[1], skip_special_tokens=True)
+        with rag_decoder_tokenizer.as_target_tokenizer():
+            output_text_1 = rag_decoder_tokenizer.decode(output_ids[0], skip_special_tokens=True)
+            output_text_2 = rag_decoder_tokenizer.decode(output_ids[1], skip_special_tokens=True)
 
         # Expected outputs as given by model at integration time.
         EXPECTED_OUTPUT_TEXT_1 = """\"She's My Kind of Girl\" was released through Epic Records in Japan in March 1972, giving the duo a Top 10 hit. Two more singles were released in Japan, \"En Carousel\" and \"Love Has Its Ways\" Ulvaeus and Andersson persevered with their songwriting and experimented with new sounds and vocal arrangements."""
@@ -874,7 +876,8 @@ class RagModelIntegrationTests(unittest.TestCase):
             attention_mask=attention_mask,
         )
 
-        outputs = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
+        with tokenizer.as_target_tokenizer():
+            outputs = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
 
         EXPECTED_OUTPUTS = [
             " albert einstein",
@@ -931,7 +934,8 @@ class RagModelIntegrationTests(unittest.TestCase):
             do_deduplication=True,
         )
 
-        outputs = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
+        with tokenizer.as_target_tokenizer():
+            outputs = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
 
         EXPECTED_OUTPUTS = [
             " albert einstein",
@@ -975,7 +979,8 @@ class RagModelIntegrationTests(unittest.TestCase):
             attention_mask=attention_mask,
         )
 
-        outputs = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
+        with tokenizer.as_target_tokenizer():
+            outputs = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
 
         EXPECTED_OUTPUTS = [
             " albert einstein",

@@ -106,7 +106,8 @@ def eval_data_dir(
             num_beams=num_beams,
             **generate_kwargs,
         )
-        preds = tokenizer.batch_decode(summaries, skip_special_tokens=True, clean_up_tokenization_spaces=False)
+        with tokenizer.as_target_tokenizer():
+            preds = tokenizer.batch_decode(summaries, skip_special_tokens=True, clean_up_tokenization_spaces=False)
         ids = batch["ids"]
         if num_return_sequences > 1:
             preds = chunks(preds, num_return_sequences)  # batch size chunks, each of size num_return_seq

@@ -90,7 +90,8 @@ require 3 character language codes:
 
     >>> model = MarianMTModel.from_pretrained(model_name)
     >>> translated = model.generate(**tokenizer(src_text, return_tensors="pt", padding=True))
-    >>> [tokenizer.decode(t, skip_special_tokens=True) for t in translated]
+    >>> with tokenizer.as_target_tokenizer():
+    >>> 	[tokenizer.decode(t, skip_special_tokens=True) for t in translated]
     ["c'est une phrase en anglais que nous voulons traduire en français",
      'Isto deve ir para o português.',
      'Y esto al español']
@@ -161,7 +162,8 @@ Example of translating english to many romance languages, using old-style 2 char
 
     >>> model = MarianMTModel.from_pretrained(model_name)
     >>> translated = model.generate(**tokenizer(src_text, return_tensors="pt", padding=True))
-    >>> tgt_text = [tokenizer.decode(t, skip_special_tokens=True) for t in translated]
+    >>> with tokenizer.as_target_tokenizer():
+    >>> 	tgt_text = [tokenizer.decode(t, skip_special_tokens=True) for t in translated]
     ["c'est une phrase en anglais que nous voulons traduire en français", 
      'Isto deve ir para o português.',
      'Y esto al español']
