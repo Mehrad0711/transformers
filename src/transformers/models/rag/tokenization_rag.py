@@ -63,10 +63,10 @@ class RagTokenizer:
         return self.current_tokenizer(*args, **kwargs)
 
     def batch_decode(self, *args, **kwargs):
-        return self.generator.batch_decode(*args, **kwargs)
+        return self.current_tokenizer.batch_decode(*args, **kwargs)
 
     def decode(self, *args, **kwargs):
-        return self.generator.decode(*args, **kwargs)
+        return self.current_tokenizer.decode(*args, **kwargs)
 
     @contextmanager
     def as_target_tokenizer(self):
