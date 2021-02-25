@@ -107,6 +107,8 @@ class PreTrainedTokenizerFast(PreTrainedTokenizerBase):
         if slow_tokenizer is not None:
             kwargs.update(slow_tokenizer.init_kwargs)
 
+        self.decode_use_source_tokenizer = False
+
         # We call this after having initialized the backend tokenizer because we update it.
         super().__init__(**kwargs)
 
@@ -490,8 +492,11 @@ class PreTrainedTokenizerFast(PreTrainedTokenizerBase):
         token_ids: Union[int, List[int]],
         skip_special_tokens: bool = False,
         clean_up_tokenization_spaces: bool = True,
+        use_source_tokenizer: bool = False,
         **kwargs
     ) -> str:
+        self.decode_use_source_tokenizer = use_source_tokenizer
+        
         if isinstance(token_ids, int):
             token_ids = [token_ids]
         text = self._tokenizer.decode(token_ids, skip_special_tokens=skip_special_tokens)

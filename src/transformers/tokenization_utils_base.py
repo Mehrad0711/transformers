@@ -3076,6 +3076,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin):
         sequences: Union[List[int], List[List[int]], "np.ndarray", "torch.Tensor", "tf.Tensor"],
         skip_special_tokens: bool = False,
         clean_up_tokenization_spaces: bool = True,
+        use_source_tokenizer: bool = False,
         **kwargs
     ) -> List[str]:
         """
@@ -3088,6 +3089,8 @@ class PreTrainedTokenizerBase(SpecialTokensMixin):
                 Whether or not to remove special tokens in the decoding.
             clean_up_tokenization_spaces (:obj:`bool`, `optional`, defaults to :obj:`True`):
                 Whether or not to clean up the tokenization spaces.
+            use_source_tokenizer (:obj:`bool`, `optional`, defaults to :obj:`False`):
+                Whether or not to use source spm to decode sequences.
             kwargs (additional keyword arguments, `optional`):
                 Will be passed to the underlying model specific decode method.
 
@@ -3099,6 +3102,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin):
                 seq,
                 skip_special_tokens=skip_special_tokens,
                 clean_up_tokenization_spaces=clean_up_tokenization_spaces,
+                use_source_tokenizer=use_source_tokenizer,
                 **kwargs,
             )
             for seq in sequences
@@ -3109,6 +3113,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin):
         token_ids: Union[int, List[int], "np.ndarray", "torch.Tensor", "tf.Tensor"],
         skip_special_tokens: bool = False,
         clean_up_tokenization_spaces: bool = True,
+        use_source_tokenizer: bool = False,
         **kwargs
     ) -> str:
         """
@@ -3124,6 +3129,8 @@ class PreTrainedTokenizerBase(SpecialTokensMixin):
                 Whether or not to remove special tokens in the decoding.
             clean_up_tokenization_spaces (:obj:`bool`, `optional`, defaults to :obj:`True`):
                 Whether or not to clean up the tokenization spaces.
+            use_source_tokenizer (:obj:`bool`, `optional`, defaults to :obj:`False`):
+                Whether or not to use source spm to decode sequences.
             kwargs (additional keyword arguments, `optional`):
                 Will be passed to the underlying model specific decode method.
 
@@ -3137,6 +3144,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin):
             token_ids=token_ids,
             skip_special_tokens=skip_special_tokens,
             clean_up_tokenization_spaces=clean_up_tokenization_spaces,
+            use_source_tokenizer=use_source_tokenizer,
             **kwargs,
         )
 
@@ -3145,6 +3153,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin):
         token_ids: Union[int, List[int]],
         skip_special_tokens: bool = False,
         clean_up_tokenization_spaces: bool = True,
+        use_source_tokenizer: bool = False,
         **kwargs
     ) -> str:
         raise NotImplementedError

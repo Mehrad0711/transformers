@@ -159,7 +159,7 @@ class MarianTokenizer(PreTrainedTokenizer):
         return self.encoder.get(token, self.encoder[self.unk_token])
 
     def remove_language_code(self, text: str):
-        """Remove language codes like <<fr>> before sentencepiece"""
+        """Remove language codes like >>fr<< before sentencepiece"""
         match = self.language_code_re.match(text)
         code: list = [match.group(0)] if match else []
         return code, self.language_code_re.sub("", text)
@@ -170,12 +170,15 @@ class MarianTokenizer(PreTrainedTokenizer):
         return code + pieces
 
     def _convert_id_to_token(self, index: int) -> str:
-        """Converts an index (integer) in a token (str) using the encoder."""
+        """Converts an index (integer) in a token (str) using the decoder."""
         return self.decoder.get(index, self.unk_token)
 
     def convert_tokens_to_string(self, tokens: List[str]) -> str:
-        """Uses target language sentencepiece model"""
-        return self.spm_target.DecodePieces(tokens)
+        """Uses source spm if decode_use_source_tokenizer is True, and target spm otherwise """
+        if self.decode_use_source_tokenizer:
+            return self.spm_source.DecodePieces(tokens)
+        else:
+            return self.spm_target.DecodePieces(tokens)
 
     def build_inputs_with_special_tokens(self, token_ids_0, token_ids_1=None) -> List[int]:
         """Build model inputs from a sequence by appending eos_token_id."""
